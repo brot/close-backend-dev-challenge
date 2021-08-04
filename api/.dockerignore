@@ -1,0 +1,6 @@
+# First ignore all files
+*
+
+# Now only allow what's really needed
+!app.py
+!requirements.txt
