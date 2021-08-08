@@ -96,15 +96,18 @@ def start_test_run(number_of_requests: int):
     """
     string_list = _create_random_string_list(amount=3, str_length=3)
 
-    for url_path in (
-        _create_random_url_path(string_list, min_path_segments=1, max_path_segments=6)
-        for _ in range(number_of_requests)
-    ):
-        # generate URL to the simulation endpoint and remove the leading "/"
-        simulated_url_path = url_for("simulated_api_endpoints", url_path=url_path)
-        simulated_url_path = simulated_url_path.lstrip("/")
+    with requests.Session() as session:
+        for url_path in (
+            _create_random_url_path(
+                string_list, min_path_segments=1, max_path_segments=6
+            )
+            for _ in range(number_of_requests)
+        ):
+            # generate URL to the simulation endpoint and remove the leading "/"
+            simulated_url_path = url_for("simulated_api_endpoints", url_path=url_path)
+            simulated_url_path = simulated_url_path.lstrip("/")
 
-        requests.get(f"{request.root_url}{simulated_url_path}")
+            session.get(f"{request.root_url}{simulated_url_path}")
 
     # not sure what to return, so just return a simple message as response body
     return f"Finished test run with {number_of_requests} requests"
